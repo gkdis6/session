@@ -1,30 +1,33 @@
 package org.gkdis6.session;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/loginCheck")
-public class loginCheck extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+@Controller
+public class loginCheck {
+    @PostMapping("/loginCheck")
+    protected String doPost(@RequestParam String userID,
+                          @RequestParam String userPwd,
+                          HttpSession session){
+        return doGet(userID, userPwd, session);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintWriter out = response.getWriter();
+    @GetMapping("/loginCheck")
+    protected String doGet(@RequestParam String userID,
+                           @RequestParam String userPwd,
+                           HttpSession session){
 
-        String userId = request.getParameter("userID");
-        String userPwd = request.getParameter("userPwd");
+        session.setAttribute("memberId", userID);
+        session.setAttribute("memberPwd", userPwd);
 
-        out.println(userId);
-        out.println(userPwd);
+        return "loginOk";
+    }
 
-        HttpSession session = request.getSession();
-        session.setAttribute("memberId", userId);
-
-        // view 페이지로 응답해줌
-        response.sendRedirect("loginOk.jsp");
+    @GetMapping("/loginOk")
+    public String showLoginOkPage() {
+        return "loginOk"; // loginOk.jsp
     }
 }
