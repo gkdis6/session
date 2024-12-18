@@ -22,6 +22,7 @@ public class loginCheck {
 
         session.setAttribute("memberId", userID);
         session.setAttribute("memberPwd", userPwd);
+//        session.setMaxInactiveInterval(3);
 
         return "loginOk";
     }
